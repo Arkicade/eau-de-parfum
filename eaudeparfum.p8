@@ -5,23 +5,16 @@ __lua__
 
 function _init()
 	menuitem(1,"colorblind mode",changepal)
-
-
 	load_x,load_dx,choice,choicemade,ch_y,winner=128,128,false,false,0,"player 0"
 	wintext = "congratulations "..winner
-
 	-- _upd and _drw will be variables that store
 	-- a function of current update and current
 	-- draw functions
 	-- to change scene, simply reassign them to
 	-- different update and draws
 	winpoint,_upd,_drw = 0,update_ps,draw_ps
-
 	about_x,about_dx,player2,funcpal,part,parttimer,partrow,helpy,helpdy,frames=128,128,false,normalpal,{},0,0,97,97,0
 end
-
-
-
 
 function loadabout(_x)
 	if player2 then
@@ -31,9 +24,7 @@ function loadabout(_x)
 		rectfill(_x+2,33,_x+123,70,8)
 	end
 
-
 	print("rules of the game",_x+25,20,8)
-
 	print("to win, get 22-30 ★ (changes",_x+4,35,7)
 	print("every game). you get ★ by",_x+4,42,7)
 	print("making perfumes with ★ scents.",_x+4,49,7)
@@ -46,10 +37,7 @@ function loadabout(_x)
 
 end
 
-
-
 function loadscore(_x)
-
 	print("final scoring",_x+40,3,10)
 	print("➡️=go back",_x+45,12,15)
 
@@ -71,7 +59,6 @@ end
 
 function cbpal()
 	_pal={128,129,129,140,131,132,134,135,140,137,10,131,13,14,6,6}
-
 	for i,c in pairs(_pal) do
 		pal(i-1,c,1)
 	end
@@ -79,39 +66,30 @@ end
 
 function normalpal()
 	for i=0,15 do
-			--poke(0x5f10+i, 128+i)
+		--poke(0x5f10+i, 128+i)
 		--you save 1 token by making it pal
 		pal(i,128+i,1)
 	end
-
 end
 
 function _update60()
 	updateparts()
 	_upd()
-
 end
-
 
 function addstock()
 	for d in all(dice) do
 		d.reroll=true
 		add(dice2r,d)
-
 	end
-
 	if player2 then
 		for f in all(dice_2) do
 			f.reroll=true
 			add(dice2r_2,f)
 		end
 	end
-
 	return dice2r,dice2r_2
-
 end
-
-
 
 function changepal()
 	if funcpal==normalpal then
@@ -119,7 +97,6 @@ function changepal()
 	else
 		funcpal=normalpal
 	end
-
 end
 
 
@@ -139,11 +116,7 @@ function startgame()
 	-- each one is a type of scent
 
 	move_die,move_die_2,x,x_2,dice_t,dice_t2,dice_y,slotmax,dice,dice2r,inv,parfum,star,heart,hincome,men,pips,slots,pname,pname_2=false,false,0,0,180,180,140,6,{},{},{},{"","",""},0,0,0,0,0,3,"an eau fraiche","an eau fraiche"
-
-
 	parfum_2,p1ready,p2ready,state1,state2,pmade,pmade_2,move_die,pos,pos_2,maxroll,maxroll_2,reroll,reroll_2,dice_2,dice2r_2,inv_2,star_2,heart_2,hincome_2,men_2,pips_2,slots_2 = {"","",""}, false,false,false,false,false,false,false,1,1,1,1,1,1,{},{},{},0,0,0,0,0,3
-
-
 
 	-- +1 for the original roll
 	-- +1 for the second roll
@@ -151,14 +124,10 @@ function startgame()
 	-- beta testing
 
 	d1,d2,d3,d4 = {1,3,5,0},{1,4,5,0},{1,4,6,0},{2,2,4,6}
-
-
 	cur = {
 		pic=24,
 		x=35,
 		y=60}
-
-
 	cur_2 = {
 		pic=25,
 		x=35,
@@ -170,7 +139,6 @@ function startgame()
 		add_dice(1,0,1)
 	end
 
-
 	if player2 then
 		for i=1,3 do
 			add_dice(1,0,2)
@@ -178,27 +146,18 @@ function startgame()
 	end
 
 	dice2r,dice2r_2 = addstock()
-
-
 	_upd,_drw = update_game,draw_game
 
-
 	talkt={"the bodore company is\noffering a greater supply\nof perfume oils (+dice).|but they expect a cut of\nour profits (-★) ...|should we go ahead with the\ndeal?","there's a new social media\napp called ◆chic-porium◆.|we could get a social\nmedia manager (+♥ income).|ideally using an existing\nemployee (-웃).|should we promote 웃 to a\nsocial media manager?","there have been suggestions\nfor a summer internship\nprogram.(+웃)|but it will be costly (-★)\nand the board said it could\nlower prestige(-♥).|should we start hiring\nsummer interns?","higher ups said we should\nstart 'elevating' our brand.|they want us to sell\nluxury, exclusive perfumes.|they have the resources to\nmake the change (transform\nall die into lvl 4).|but it's not going to\nbe cheap...(-dice).|should we make our perfumes\nas veblen goods?","investors are concerned\nwith our sales.|they said we should have a\nsignature 'woody' flavour \n(upgrade dice to lvl 3).|but that will take time\n(-♥) and money (-★).|should we head towards a\nrebranding?","aroma essential oils\nreached out to us for a\ncollaboration.|they want us to use their\nnew oil (rank 3) for our\nnewest perfume.|but this could hurt us\n(-♥) as we can be seen as\na 'sellout'.|should we accept their\noffer for a collaboration?","'colore' perfumes (our\ncompetitor), noticed we had\nleftover scents.|we could sell it to them.\n(score all scents in your\ninventory)|but we could lose future\nsales (-★) and our\nreputation (-♥).|should we sell our leftover\nscents?","our perfumers requested\nmore storage for scents (+1\ninventory slot).|but those don't come cheap\n(-★).|should we accept their\nrequest?","the board suggested we\nshould do a rebranding to\nincrease sales.|they thought a 'floral'\nscent was the way to go\n(transform dice to lvl 2).|but that's going to cost us\nin the short run (-★).|should we rebrand to a\nfloral flavour?","our aromachologists say\nwe have too much unused\nstorage (-1 inventory slot)|we can sell it (+★) to gain\neconomies of scale (+웃).|should we sell our storage?","we interviewed an excellent\ncandidate for a new\nperfumer (+웃).|but we recently discovered\n웃 has a criminal record\n(-♥)(-♥ income).|but 웃 is very resourceful.\n(+rank 2)(upgrade die)|should we hire the new\nperfumer?","some aromachologists made a\nbreakthrough with 'fusion' \nscents.(gain +1/-1 chips)|but it's a risky purchase\nwhich could upset investors\n(-♥).|should we buy the new\nequipment?"}
-
 	r_event=flr(rnd(#talkt))+1
 
 	talkqueue=split(talkt[r_event],"|")
-
 	txtbuttx=true   nexttalk()
 
 end
 
-
-
 -->8
 -- update
-
-
 
 ///////// player select
 //////////////////////
@@ -210,37 +169,29 @@ function update_ps()
 	if about_x!=about_dx then
 		about_x+=(about_dx-about_x)/5
 	end
-
 	if btnp(⬅️) then
 		sfx(54)
 		about_dx=0
 	end
-
 	if btnp(➡️) then
 		sfx(54)
 		about_dx=128
 	end
-
-
 	if player2 and btnp(5,1) then
 		sfx(59)
 		player2 = false
 	end
-
 	f+=2
-
 	if btn(🅾️) then
 		sfx(53)
 		_upd,_drw=update_expo,draw_expo
 	end
-
 	for i=0,4 do
 		if btnp(i,1) and not player2 then
 			sfx(53)
 			player2 = true
 		end
 	end
-
 end
 
 
@@ -250,7 +201,6 @@ function update_expo()
 		sfx(52)
 		startgame()
 	end
-
 end
 
 
@@ -263,38 +213,27 @@ function newround()
 	---- actually update all stats here
 	---- minus heart income
 	heart+=hincome
-
 	heart_2+=hincome_2
-
 	reroll,reroll_2=maxroll,maxroll_2
-
 	round+=1
 
 	if #parfum<3 then
 		parfum = {"","",""}
 	end
-
 	if #parfum_2<3 and player2 then
 		parfum_2={"","",""}
 	end
-
 	dice2r,dice2r_2={},{}
-
 	dice2r,dice2r_2 = addstock()
-
 	dice_t,dice_y,dice_t2,x,x_2,pos,pos_2,choice,choicemade=180,140,180,0,0,1,1,false,false
 	cur.x,cur_2.x,cur.y,cur_2.y=35,35,60,110
-
 	move_die,move_die_2,p1ready,p2ready,state1,state2,pmade,pmade_2=false,false,false,false,false,false,false,false
-
-
 end
 
 
 function update_win()
 	riseparticles()
 	f+=2
-
 	if btnp(❎) then
 		sfx(52)
 		_upd,_drw = update_ps,draw_ps
@@ -303,9 +242,7 @@ function update_win()
 	 startgame()
 	 _upd,_drw=update_game,draw_game
 	end
-
 	slidinganimation()
-
 end
 
 
@@ -315,17 +252,14 @@ function slidinganimation()
 	if load_x!=load_dx then
 		load_x+=(load_dx-load_x)/5
 	end
-
 	if btnp(⬅️) then
 		sfx(54)
 		load_dx=0
 	end
-
 	if btnp(➡️) then
 		sfx(54)
 		load_dx=128
 	end
-
 end
 
 
@@ -333,8 +267,6 @@ end
 
 function update_lose()
 	dropparticles({1,1,14,8,5,6},{},65)
-
-
 	if btnp(❎)then
 		sfx(52)
 		_upd,_drw = update_ps,draw_ps
@@ -343,28 +275,21 @@ function update_lose()
 	 startgame()
 	 _upd,_drw=update_game,draw_game
 	end
-
 	slidinganimation()
-
-
 end
 
 
 function trig_endgame()
-
 	---- subtracting negative
 	---- points
 	if heart<0 then
 		star-=(heart/2)
 	end
-
 	if men<0 then
 		star-=(men/1.5)
 	end
-
 	flr(star)
-
-
+	
 	if player2 then
 
 		----subtracting negative
@@ -372,26 +297,20 @@ function trig_endgame()
 		if heart_2<0 then
 			star_2-=(heart_2/3)
 		end
-
 		if men_2<0 then
 			star_2-=(men_2/2)
 		end
-
-
 		if star > star_2 then
 			winner="player 1"
 		else
 			winner="player 2"
 		end
-
 	else
 		if star >winpoint then
 			winner="player 1"
 		end
-
 	end
 	wintext = "congratulations "..winner
-
 	talkqueue=split("now the moment you've all\nbeen waiting for...|after your dedication to\nthe perfume industry...|which one of you\nwill be our featured\nparfumist of the year?|who will be rewarded\nwith their own startup\ncompany?|people of parfum, i'm\nproud to announce...|the winner (★) is...","|")
 	_upd,_drw=update_talk,draw_talk
 
@@ -400,27 +319,19 @@ end
 
 
 function update_nextstage()
-
 	riseparticles()
-
 	--addpart(flr(rnd(128)),flr(rnd(64)),_dx,_dy,2,120+rnd(15),_mycol,3+rnd(6))
-
-
 	if btnp(❎) then
-
 		if round > 6 then
 			trig_endgame()
 		else
 			_upd,_drw=update_talk,draw_talk
 		end
-
 	end
-
 end
 
 
 function update_upgrade()
-
 	if state1 and not p1ready then
 		pips,hincome,slots,heart,men,dice=doupgrade(pips,hincome,slots,pos,cur,heart,men,dice,1)
 	elseif not p1ready then
@@ -441,19 +352,14 @@ function update_upgrade()
 
 end
 
-
-
 function update_income()
 	--leftov(cur)
 	if #dice2r==0 then
 		p1ready=true
 	end
-
 	if #dice2r_2==0 then
 		p2ready=true
 	end
-
-
 	if not p1ready then
 		heart,pips,dice2r=leftov(cur,heart,pips,dice2r,1)
 	end
@@ -461,8 +367,6 @@ function update_income()
 	if player2 and not p2ready then
 		heart_2,pips_2,dice2r_2=leftov(cur_2,heart_2,pips_2,dice2r_2,2)
 	end
-
-
 	if (p1ready and not player2) or (p1ready and p2ready and player2) then
 		--upgrade workers and buy
 		-- more dice phase!!
@@ -472,19 +376,15 @@ function update_income()
 		--_upd=update_upgrade
 		--_drw=draw_upgrade
 	end
-
 end
 
 
 function update_pmade()
 	riseparticles()
-
 	f+=2
-
 	if btnp(❎) then
 		_upd,_drw=update_income,draw_income
 	end
-
 end
 
 ////////making perfume
@@ -493,32 +393,22 @@ function update_inv()
 	--if btnp(❎) then
 		--startgame()
 	--end
-
 	if p1ready and not state1 then
 		pos,ivn=perfume2butt(pos,cur,inv,1)
 	elseif not state1 then
 		pname,pos,star,heart,men=perfumebutt(pname,star,heart,men,pos,cur,inv,1)
 	end
-
 	if player2 then
 		if p2ready and not state2 then
 			pos_2,inv_2=perfume2butt(pos_2,cur_2,inv_2,2)
 		elseif not state2 then
 			pname_2,pos_2,star_2,heart_2,men_2=perfumebutt(pname_2,star_2,heart_2,men_2,pos_2,cur_2,inv_2,2)
 		end
-
 	end
 
 	if (state1 and not player2) or (state1 and state2 and player2) then
 		p1ready,p2ready,state1,state2,pos,pos_2,cur.x,cur.y,cur_2.x,cur_2.y,_upd,_drw=false,false,false,false,1,1,20,86,90,86,update_pmade,draw_pmade
-		--pos,pos_2=1,1
-		--cur.x,cur.y,cur_2.x,cur_2.y=20,86,90,86
-		--_upd=update_income
-		--_drw=draw_income
-
 	end
-	--- do some more stuff :)
-
 end
 
 
@@ -535,59 +425,36 @@ function funupdate()
 	local _dx = sin(_ang)*(rnd(0.5))
 	local _dy = cos(_ang)*(rnd(0.5))
 	local _mycol={1,1,15,4,5}
-
-
 	--addpart(flr(rnd(128)),_top,_dx,_dy,5,80+rnd(15),_mycol,3+rnd(6))
 	addpart(flr(rnd(128)),10,_dx,_dy,5,120+rnd(15),_mycol,3+rnd(6))
-
-	--for d in all(dice2r_2) do
-		--d.num=6
-	--end
-
-	---checking if either player is done
-	--if btnp(5,0) then
-		--cur.y,p1ready=200,true
-		--p1ready=true
-		--sfx(60)
-	--elseif btnp(5,1) then
-		--cur_2.y,p2ready=200,true
-		--p2ready=true
-		--sfx(60)
-	--end
+	
 	local ccount=0
 	for d in all(dice2r) do
 		if d.num==0 then
 			ccount+=1
 		end
 	end
-
 	if ccount==#dice2r then
 		p1ready=true
 	end
-
 	ccount=0
 	for d in all(dice2r_2) do
 		if d.num==0 then
 			ccount+=1
 		end
 	end
-
 	if ccount==#dice2r_2 then
 		p2ready=true
 	end
-
-
 
 	if #dice2r==0 or #inv==slots then
 		p1ready,cur.y=true,200
 		--cur.y=200
 	end
-
 	if (#dice2r_2==0 or #inv_2==slots_2) and player2 then
 		p2ready,cur_2.y=true,200
 		--cur_2.y=200
 	end
-
 	if (p1ready and not player2) or (player2 and p1ready and p2ready) then
 		--startgame()
 		state1,state2=false,false
@@ -597,8 +464,7 @@ function funupdate()
 		--_upd=update_inv
 		--_drw=draw_inv
 	end
-
-		--------player 1 updates
+	--------player 1 updates
 	if not p1ready then
 		pos,dice2r=scentbutt(inv,slots,pos,cur,dice2r,1)
 	end
@@ -606,8 +472,6 @@ function funupdate()
 	if player2 and not p2ready then
 		pos_2,dice2r_2=scentbutt(inv_2,slots_2,pos_2,cur_2,dice2r_2,2)
 	end
-
-
 end
 
 
@@ -615,22 +479,16 @@ end
 ---------------------
 ------------------------
 --------------------
-
-
 ///////// rolling dice screen
 //////////////////////
 function update_game()
 	--
 	addpart(flr(rnd(128)),0,0.1,rnd(0.5),0,256,{15},0)
-
-
 	-------- player 1 updates
 	state1,dice,pips,reroll,pos,dice2r,move_die=dobutt(state1,dice,pips,maxroll,reroll,pos,cur,dice2r,move_die,1)
 	if player2 then
 		state2,dice_2,pips_2,reroll_2,pos_2,dice2r_2,move_die_2=dobutt(state2,dice_2,pips_2,maxroll_2,reroll_2,pos_2,cur_2,dice2r_2,move_die_2,2)
 	end
-	--spawnbgparts(true,flr(rnd(200)))
-
 end
 
 
@@ -658,9 +516,7 @@ function draw_ps()
 	end
 
 	wobbletext(text,7,adv,10)
-
 	wobbletext(text2,10,adv,22)
-
 	loadabout(about_x)
 end
 
@@ -675,7 +531,6 @@ function wobbletext(text,coll,adv,yplus)
 		print(sub(text,c,c),x+adv,60+y)
 		x=x+4
 	end
-
 end
 
 function expspr(a,b,x,y)
@@ -684,7 +539,6 @@ function expspr(a,b,x,y)
 		spr(i,x+xp,y)
 		xp+=10
 	end
-
 end
 
 function draw_expo()
@@ -697,20 +551,17 @@ function draw_expo()
 	spr(1,2,32)
 	print("buys citrus scents",15,34)
 	expspr(26,28,90,32)
-
-
+	
 	spr(2,2,44)
 	print("buys floral scents",15,46)
 	expspr(29,31,90,44)
-
+	
 	spr(3,2,56)
 	print("buys woody scents",15,58)
 	expspr(32,34,90,56)
 
-
 	spr(4,2,68)
 	print("upgrades 1 selected die *",15,70,2)
-
 	spr(1,5,79)
 	spr(77,25,79)
 	print("->    this is an upgrade",15,81,2)
@@ -718,22 +569,17 @@ function draw_expo()
 
 	expspr(5,8,5,102)
 	print("higher lvl dice come\nwith upgraded sides",47,102)
-
 	print("◆ press ❎ to start ◆",15,121)
-
 end
 
 
 function draw_win()
  local adv= load_x-128
  cls(15)
-
  if player2 then
 		rectfill(65,0,128,128,10)
 	end
-
 	drawparts()
-
 	rectfill(0+adv,35,127+adv,50,7)
 	if winner=="player 2" then
 		drawperfume(true,23+adv,15)
@@ -742,12 +588,9 @@ function draw_win()
 		drawperfume(false,23+adv,15)
 		wobbletext(wintext,8,adv,-20)
 	end
-
-
 	rectfill(0,0,128,20,2)
 	print("🅾️=play again ❎=main menu",15+adv,3,10)
 	print("⬅️=check exact scoring",17+adv,12,15)
-
 	loadscore(load_x)
 end
 
@@ -755,14 +598,11 @@ function draw_lose()
 	local adv= load_x-128
 	cls(5)
 	drawparts()
-
 	rectfill(0,65,128,75,1)
 	print("you lost",50+adv,67,14)
-
 	rectfill(0,0,128,20,2)
 	print("🅾️=play again ❎=main menu",15+adv,3,10)
 	print("⬅️=check exact scoring",17+adv,12,15)
-
 	loadscore(load_x)
 
 end
@@ -770,12 +610,9 @@ end
 
 function draw_nextstage()
 	cls(15)
-
 	if not player2 then
 		drawparts()
 	end
-
-
 	if player2 then
 		rectfill(65,0,128,128,10)
 		drawparts()
@@ -793,12 +630,9 @@ function draw_nextstage()
 				icount+=1
 			end
 		end
-
 		print("scent slots: "..slots_2,70,70,3)
 		print("+♥"..hincome_2.." per turn",70,80,3)
 		print("+1/-1 chips: "..pips_2,70,90,3)
-
-
 	end
 
 
@@ -820,35 +654,26 @@ function draw_nextstage()
 			icount+=1
 		end
 	end
-
 	print("scent slots: "..slots,5+p1p,70,2)
 	print("+♥"..hincome.." per turn",5+p1p,80,2)
 	print("+1/-1 chips: "..pips,5+p1p,90,2)
-
 	rectfill(0,111,128,128,7)
 	print("end of round "..(round-1),35,113,0)
 	print("press ❎ to continue",20,121,0)
-
-
-
 end
 
 
 function draw_upgrade()
 	up_text={"1♥","2♥","4♥"}
-
 	cls(2)
 	rectfill(0,0,128,10,14)
 	print("🅾️=select ❎=done",22,3,2)
-
 	print("buy a new die: 4♥",5,15,15)
 	print("upgrade an existing die: 2♥",5,25,15)
 	print("promote 1웃: 1♥",5,35,15)
-
 	print("⬆️",30,52-sin(time()*2),15)
 	print("spend "..up_text[pos],5,60,14)
 	print("⬇️",30,68+sin(time()*2),15)
-
 	print("p1 ♥: "..heart,5,80,14)
 
 	if player2 then
@@ -858,8 +683,6 @@ function draw_upgrade()
 
 		print("p2 ♥: "..heart_2,5,120,10)
 	end
-
-
 
 	------- upgrading the dice
 	if state1 and pos==2 then
@@ -884,7 +707,6 @@ function draw_upgrade()
 
 		palt(12,true)
 		spr(cur.pic,cur.x,cur.y+sin(time()*2))
-
 	end
 
 	------- upgrading the dice player2
@@ -902,33 +724,24 @@ function draw_upgrade()
 	------- upgrading the man
 	elseif state2 and pos_2==1 and player2 then
 		print("pick a promotion",50,90,7)
-
 		rectfill(50,98,86,118,6)
 		print("+1♥ each\nturn\n      웃",51,100,2)
 		rectfill(91,98,125,118,7)
 		print("+1 scent\nslot\n      웃",92,100,2)
-
 		palt(12,true)
 		spr(cur_2.pic,cur_2.x,cur_2.y+sin(time()*2))
-
 	end
 	palt()
-
-
 end
 
 
 
 function draw_income()
 	cls(6)
-
 	print("player 1 ★: "..star,5,10,0)
 	print("player 1 ♥: "..heart,5,20,0)
 	print("player 1 웃: "..men,5,30,0)
-
 	print("leftover dice",5,45,0)
-
-
 	local icount=0
 	local xp=0
 	for d in all(dice2r) do
@@ -938,22 +751,17 @@ function draw_income()
 			icount+=1
 		end
 	end
-
 	palt(12,true)
 	spr(38,10,65+sin(time()*2))
-
 	rectfill(2,cur.y-9,62,cur.y-2,8)
-
 	print("sell for +1/-1",5,78,15)
 	print("sell for 1♥",5,95,15)
-
 
 	if player2 then
 		print("player 2 ★: "..star_2,70,10,2)
 		print("player 2 ♥: "..heart_2,70,20,2)
 		print("player 2 웃: "..men_2,70,30,2)
 		print("leftover dice",70,45,2)
-
 		local icount=0
 		local xp=0
 		for d in all(dice2r_2) do
@@ -966,27 +774,20 @@ function draw_income()
 
 		palt(12,true)
 		spr(38,75,65+sin(time()*2))
-
 		rectfill(67,cur_2.y-9,126,cur_2.y-2,3)
-
 		print("sell for +1/-1",70,78,10)
 		print("sell for 1♥",70,95,10)
-
 	end
 
 	rectfill(0,117,128,128,7)
 	print("⬆️⬇️=move 🅾️=select ❎=done",12,120,1)
-
 	palt()
 	cursordraw()
-
-
 end
 
 function draw_pmade()
 	cls(15)
 	local xplus=20
-
 	if player2 then
 		rectfill(65,0,128,128,10)
 		xplus=0
@@ -998,32 +799,25 @@ function draw_pmade()
 			print("no perfumes were made",20,57,3)
 		end
 	end
-
-
 	if pmade then
 		if not pmade_2 then
 			drawparts()
 		end
-
 		drawperfume(false,xplus,18)
 		wobbletext("made "..pname,8,0,-20)
 
 	else
 		print("no perfumes were made",20,37,8)
 	end
-
 	print("press ❎ to continue",23,10,0)
-
 end
 
 
 function draw_inv()
 	cls(15)
-
 	local y=2
 	local typ
 	local rank
-
 	drawperfume(false,0,0)
 	rectfill(10,50,20,60,2)
 	rectfill(10,74,20,84,2)
@@ -1037,18 +831,13 @@ function draw_inv()
 			icount+=1
 		end
 	end
-
 	if p1ready then
 		print("❎=go back",2,120,8)
 	else
 		print("❎=make perfume",2,120,8)
 	end
-
-
-
 	if state1 then
 		rectfill(0,33,64,42,7)
-
 		if pmade then
 			print("perfume made!",5,37,8)
 		else
@@ -1063,20 +852,13 @@ function draw_inv()
 			getpic(p,12,51+pll)
 			pll+=24
 		end
-
-
 	end
-
-
-
 	if player2 then
 		rectfill(65,0,128,128,3)
 		--where green=true
-
 		rectfill(108,50,118,60,0)
 		rectfill(108,74,118,84,0)
 		rectfill(108,98,118,108,0)
-
 		y=68
 		local jcount=0
 		for j in all(inv_2) do
@@ -1088,16 +870,12 @@ function draw_inv()
 		end
 		palt()
 		drawperfume(true,50,0)
-
 		if p2ready then
 			print("❎=go back",67,120,10)
 		else
 			print("❎=make perfume",67,120,10)
 		end
-
-
-
-
+		
 		if state2 then
 			rectfill(66,33,128,42,7)
 			if pmade_2 then
@@ -1114,14 +892,10 @@ function draw_inv()
 				getpic(p,110,51+pll)
 				pll+=24
 		end
-
 		end
-
-
 	else
 		rectfill(65,0,128,128,14)
 		print("🅾️=select scent",67,120,8)
-
 		print("put 1 scent\nin each slot.",70,4,2)
 		print("if you can't,\nthe perfume\nwon't be made.",70,20,2)
 
@@ -1135,15 +909,11 @@ function draw_inv()
 		print("citrus top\nmiddle=bottom",67,85,13)
 		print("+3★",111,97,7)
 
-
 		print("all same type",67,104,13)
 		print("+4★",94,111,7)
 		print("+2♥",111,111,8)
 
 	end
-
-
-
 
 	if p1ready then
 		getpic(inv[pos],cur.x+1,cur.y-12)
@@ -1152,10 +922,8 @@ function draw_inv()
 	if p2ready and player2 then
 		getpic(inv_2[pos_2],cur_2.x+1,cur_2.y-12)
 	end
-
 	palt()
 	cursordraw()
-
 end
 
 
@@ -1176,18 +944,14 @@ function fundraw()
 	rectfill(0,15,128,47,15)
 	rectfill(0,50,128,82,13)
 	rectfill(0,85,128,117,4)
-
 	print("citrus scents (1-2)",10,18,9)
 	print("floral scents (3-4)",10,53,2)
 	print("woody scents (5-6)",10,88,0)
 
 
 	scentspr(26,28,28,7,9)
-
 	scentspr(29,31,63,14,2)
-
 	scentspr(32,34,98,1,0)
-
 	palt()
 
 	local x=0
@@ -1205,9 +969,8 @@ function fundraw()
 			x+=7
 		end
 	end
-		-------- cursors
+	-------- cursors
 	cursordraw()
-
 end
 
 function scentspr(a,b,y,c1,c2)
@@ -1218,18 +981,13 @@ function scentspr(a,b,y,c1,c2)
 		print(cost_print[i-25],y2+10,y+14,c2)
 		y2+=40
 	end
-
-
 end
 
 
 function draw_game()
-
 	cls(11)
 	map()
-
 	drawparts()
-
 	if player2 then
 		rectfill(0,75,128,130,8)
 		drawparts()
@@ -1242,7 +1000,6 @@ function draw_game()
 		print("⬅️➡️=move  ❎=reroll", 28,4,2)
 		print("🅾️=keep selected die",23,13,2)
 	end
-
 	move_die,dice_t=dodiceroll(x,dice2r,dice_t,move_die,1)
 	if player2 then
 		move_die_2,dice_t2=dodiceroll(x_2,dice2r_2,dice_t2,move_die_2,2)
@@ -1260,20 +1017,16 @@ function draw_game()
 		print("rolls:"..reroll_2,3,85,10)
 	end
 
-
-
 	palt(12,true)
 	-------- cursors
 	if not move_die then
 		spr(cur.pic,cur.x,cur.y+sin(time()*2))
 	end
-
 		if reroll_2!=maxroll_2 then
 			spr(cur_2.pic,cur_2.x,cur_2.y+sin(time()*2)+50)
 		elseif player2 then
 			spr(cur_2.pic,cur_2.x,cur_2.y+sin(time()*2))
 		end
-
 	palt()
 
 	print("+1/-1 chips ⬆️⬇️",3,23,2)
@@ -1284,11 +1037,9 @@ function draw_game()
 		print("select die to upgrade",20,68,0)
 	end
 
-
 	if state2 and #dice2r_2!=0 and player2 then
 		print("select die to upgrade",20,120,7)
 	end
-
 end
 
 
@@ -1319,13 +1070,11 @@ end
 -- type = 3: citrus/floral dice
 -- type = 4: gambling dice
 
-
 function ani2p(times,set)
 	times=180
 	if times>0 then
 		times=0
 	end
-
 	for d in all(set) do
 		if d.reroll then
 			rolldice(d)
@@ -1347,7 +1096,6 @@ function rollani(m,pl)
 	return m,dice_t,dice_t2
 end
 
-
 function toreroll(d,set)
 	trr = false
 	for m in all(set) do
@@ -1358,12 +1106,10 @@ function toreroll(d,set)
 	return trr
 end
 
-
 function rolldice(d)
 	d.val = max(1,flr(rnd(5)))
 	valdice(d)
 end
-
 
 function valdice(d)
 	if d.typ == 2 then
@@ -1377,19 +1123,15 @@ function valdice(d)
 	end
 end
 
-
-
 ---------===============
 ----------searching for 1 die
 function searchdice(dicer,num,fd)
-
 	for d in all(dicer) do
 		if d.num==num and not fd then
 			fd=true
 			del(dicer,d)
 		end
 	end
-
 	return dicer,fd
 end
 
@@ -1399,7 +1141,6 @@ end
 function search_2(dicer,num1,num2,fd)
 	local f1,f2,fd=false,false,false
 	local d1,d2
-
 
 	for d in all(dicer) do
 		if d.num==num1 and not f1 then
@@ -1430,7 +1171,7 @@ end
 
 function inv_ds(typ,rank)
 	local pic=32
-
+	
 	if typ=="c" then
 		pic=26
 	elseif typ=="f" then
@@ -1442,68 +1183,45 @@ function inv_ds(typ,rank)
 	elseif rank=="3" then
 		pic+=2
 	end
-
 	return pic
-
 end
-
-
-
-
 
 
 function drawperfume(green,_x,_y)
 	if green then
 		_pal={128,129,130,131,132,133,134,138,139,139,138,139,140,129,131,131}
-
 		for i=0,15 do
 			pal(i,_pal[i+1],0)
 		end
-
 	end
 
-
 	local y=20
-
 	local cont=0
 	local pp=34
 	local pl=0
-
 	for k=1,24 do
 		pp+=1
 		y+=8
 		cont+=1
 		spr(pp,y+_x,50+pl+_y)
-
 		if cont%3==0 then
 			y=20
 			pp+=13
 			pl+=8
 			cont=0
 		end
-
-
 	end
-
 	pal()
-
 	funcpal()
-
 end
-
-
-
 
 function cursordraw()
 	palt(12,true)
 	spr(cur.pic,cur.x,cur.y+sin(time()*2))
-
 	if player2 then
 		spr(cur_2.pic,cur_2.x,cur_2.y+sin(time()*2))
 	end
-
 	palt()
-
 end
 
 
@@ -1546,9 +1264,7 @@ function movedice(d,xv,dtime,move,pl)
 	return move,dtime
 end
 
-
 function getpic(str,x,y)
-
 		if str!="" then
 			ty=sub(str,1,1)
 			ra=sub(str,2,2)
@@ -1560,13 +1276,11 @@ end
 
 function sellperfume(name,sta,hear,me,pl)
 	local set={}
-
 	if pl==1 then
 		set=parfum
 	else
 		set=parfum_2
 	end
-
 	local tylist={}
 	for p in all(set) do
 
@@ -1574,7 +1288,6 @@ function sellperfume(name,sta,hear,me,pl)
 		ty=sub(p,1,1)
 		add(tylist,ty)
 	end
-
 	---bonus points based
 	---on types
 	if tylist[1]=="c" and tylist[2]=="f" and tylist[3]=="w" then
@@ -1598,25 +1311,19 @@ function sellperfume(name,sta,hear,me,pl)
 	for p in all(set) do
 		del(set,p)
 	end
-
 	return name,sta,hear,me
-
 end
-
-
 
 function addvalue(str,sta,hear,me)
 	local ra,ty
-
 	ra=sub(str,2,2)
 	if ra=="3" then
 		sta+=3
 	else
 		sta+=1
 	end
-
+	
 	ty=sub(str,1,1)
-
 	if ty=="c" then
 		if ra!="1" then
 			sta+=1
@@ -1633,22 +1340,16 @@ function addvalue(str,sta,hear,me)
 		end
 	end
 
-
-
 	return sta,hear,me
-
 end
 
 
 function reward(sta,hear,me,dicel,pip,inven,income,slot,pl)
 	local ttp = {"c","f","w"}
-
 	if r_event==1 then
-
 		if #dicel<5 then
 			add_dice(1,0,pl)
 		end
-
 		sta-=2
 	elseif r_event==2 then
 		income+=1
@@ -1658,7 +1359,6 @@ function reward(sta,hear,me,dicel,pip,inven,income,slot,pl)
 		sta-=1
 		hear-=1
 	elseif r_event==4 then
-
 		local len=#dicel
 
 		for d in all(dicel) do
@@ -1668,10 +1368,7 @@ function reward(sta,hear,me,dicel,pip,inven,income,slot,pl)
 		for i=1,len-1 do
 			add_dice(4,12,pl)
 		end
-
-
 	elseif r_event==5 then
-
 		local ccount=0
 		for d in all(dicel) do
 			if d.typ!=3 and ccount<2then
@@ -1683,25 +1380,20 @@ function reward(sta,hear,me,dicel,pip,inven,income,slot,pl)
 
 		sta-=1
 		hear-=2
-
 	elseif r_event==6 then
-
 		local typ = ttp[flr(rnd(3))+1]
 
 		add(inven,typ..3)
 		hear-=1
 	elseif r_event==7 then
-
 		for i in all(inven) do
 			sta,hear,me=addvalue(i,sta,hear,me)
 			del(inven,i)
 		end
-
 	elseif r_event==8 then
 		slot+=1
 		sta-=1
 	elseif r_event==9 then
-
 		local ccount=0
 		for d in all(dicel) do
 			if d.typ!=2 and ccount<2then
@@ -1710,15 +1402,12 @@ function reward(sta,hear,me,dicel,pip,inven,income,slot,pl)
 				ccount+=1
 			end
 		end
-
 		sta-=1
-
 	elseif r_event==10 then
 		sta+=1
 		me+=1
 		slot-=1
 	elseif r_event==11 then
-
 		me+=1
 
 		local typ = ttp[flr(rnd(3))+1]
@@ -1732,15 +1421,11 @@ function reward(sta,hear,me,dicel,pip,inven,income,slot,pl)
 				ccount+=1
 			end
 		end
-
 		income-=1
 		hear-=1
-
 	else
 		pip+=3
 		hear-=1
-
-
 	end
 
 	for f in all(dice2r) do
@@ -1750,7 +1435,6 @@ function reward(sta,hear,me,dicel,pip,inven,income,slot,pl)
 	for f in all(dice2r_2) do
 		del(dice2r_2,f)
 	end
-
 
 	for d in all(dice) do
 		d.reroll=true
@@ -1762,14 +1446,11 @@ function reward(sta,hear,me,dicel,pip,inven,income,slot,pl)
 		add(dice2r_2,d)
 	end
 
-
-
 	return sta,hear,me,dicel,pip,inven,income,slot
 end
 
 -->8
 -- gameplay updates
-
 
 -- button actions associated
 function upgradebutt(poz,curs,hear,me,pl)
@@ -1809,10 +1490,8 @@ function upgradebutt(poz,curs,hear,me,pl)
 			p2ready=true
 		end
 	end
-
 	return poz
 end
-
 
 function doupgrade(pip,income,slot,poz,curs,hear,me,dicel,pl)
 	butt=pl-1
@@ -1861,10 +1540,7 @@ function doupgrade(pip,income,slot,poz,curs,hear,me,dicel,pl)
 			else
 				state2=false
 			end
-
 		end
-
-
 	----- upgrade the die
 	elseif poz==2 then
 
@@ -1915,8 +1591,6 @@ function doupgrade(pip,income,slot,poz,curs,hear,me,dicel,pl)
 	return pip,income,slot,hear,me,dicel
 end
 
-
-
 function upgradedie(die,dicel,hear,pl)
 	local typeup = die.typ+1
 	local piclist = {0,4,8,12}
@@ -1933,8 +1607,6 @@ function upgradedie(die,dicel,hear,pl)
 
 	return dicel,hear
 end
-
-
 
 function leftov(curs,hear,pip,dicer,pl)
 	butt = pl-1
@@ -1962,9 +1634,6 @@ function leftov(curs,hear,pip,dicer,pl)
 	end
 	return hear,pip,dicer
 end
-
-
-
 
 function perfumebutt(name,sta,hear,me,poz,curs,inven,pl)
 	butt = pl-1
@@ -1995,7 +1664,6 @@ function perfumebutt(name,sta,hear,me,poz,curs,inven,pl)
 			curs.x,curs.y,p2ready=109,63,true
 		end
 
-
 	elseif btnp(5,butt) then
 		--- press the ❎ button
 
@@ -2008,15 +1676,12 @@ function perfumebutt(name,sta,hear,me,poz,curs,inven,pl)
 			--- is ready to be sold
 
 			--- exit from this state
-
-
 		else
 			set,state2=parfum_2,true
 			--- we check if the perfume
 			--- is ready to be sold
 
 			--- exit from this state
-
 		end
 
 		local pcount=0
@@ -2040,8 +1705,6 @@ function perfumebutt(name,sta,hear,me,poz,curs,inven,pl)
 
 	return name,poz,sta,hear,me
 end
-
-
 
 function perfume2butt(poz,curs,inven,pl)
 	butt = pl-1
@@ -2071,7 +1734,6 @@ function perfume2butt(poz,curs,inven,pl)
 	return poz,inven
 end
 
-
 function makeperfume(curs,inven,poz,pl)
 	--local
 	local index=0
@@ -2097,7 +1759,6 @@ function makeperfume(curs,inven,poz,pl)
 	return poz,inven
 end
 
-
 function scentbutt(inven,slot,poz,curs,dicer,pl)
 	butt = pl-1
 	if btnp(0,butt) then
@@ -2112,17 +1773,12 @@ function scentbutt(inven,slot,poz,curs,dicer,pl)
 	elseif btnp(3,butt) then
 		sfx(62)
 		curs.y,poz=min(curs.y+35,110),min(poz+1,3)
-
 	elseif btnp(4,butt) then
 
 		dicer=evalscent(curs,poz,dicer,pl)
-
 	end
-
 	return poz,dicer
 end
-
-
 
 
 function evalscent(curs,poz,dicer,pl)
@@ -2130,7 +1786,6 @@ function evalscent(curs,poz,dicer,pl)
 	local num_check = 0
 	local typ=""
 	local founddice=false
-
 	if poz == 1 then
 		--== citrus eval
 		num_check = 1
@@ -2144,8 +1799,6 @@ function evalscent(curs,poz,dicer,pl)
 		num_check = 5
 		typ="w"
 	end
-
-
 	if curs.x==10 then
 		/////////-----rank=1
 		rank=1
@@ -2160,11 +1813,9 @@ function evalscent(curs,poz,dicer,pl)
 		----- 2, 4 and 6
 		dicer,founddice=searchdice(dicer,num_check,founddice)
 		--num_check-=1
-
 		--if not founddice then
 			----searching for 2 1s
 			----a pair to buy
-
 	else
 		/////////////-----rank=3
 		--sfx(56)
@@ -2176,26 +1827,19 @@ function evalscent(curs,poz,dicer,pl)
 			----- searching for 2 and 2
 		dicer,founddice=search_2(dicer,num_check,num_check,founddice)
 		------------end
-
 	end
-
-
 	if founddice then
 		sfx(61)
-
 		--- actually adding items
 		--- to the inventory
-
 		if pl==1 then
 			add(inv,typ..rank)
 		else
 			add(inv_2,typ..rank)
 		end
-
 	else
 		sfx(59)
 	end
-
 	return dicer
 end
 
@@ -2208,7 +1852,6 @@ function dobutt(state,dicel,pip,maxx,roll,poz,curs,dicer,move,pl)
 		roll -= 1
 		poz= 1
 		curs.x=35
-
 		move,dice_t,dice_t2=rollani(move,pl)
 		curs.y=dicer[1].ye +11
 	elseif not move and roll<maxx then
@@ -2238,11 +1881,9 @@ function dobutt(state,dicel,pip,maxx,roll,poz,curs,dicer,move,pl)
 				dicel[poz].num-=2
 				dicel[poz].val-=1
 				sfx(56)
-
 			else
 				sfx(59)
 			end
-
 
 		elseif btnp(4,butt) then
 			if #dicer==0 then
@@ -2290,7 +1931,6 @@ function resetdie(dicer,poz,curs,pl)
 			end
 
 			_upd,_drw=funupdate,fundraw
-
 
 		elseif #dicer==0 and player2 then
 			if pl==2 then
@@ -2341,9 +1981,6 @@ function addpart(_x,_y,_dx,_dy,_type,_maxage,_col,_s)
 	add(part,_p)
 end
 
-
-
-
 ---type 0 static pixel
 ---type 1 moving pixel
 ---type 2 ball of smoke
@@ -2376,7 +2013,6 @@ function updateparts()
 				_p.dy+=0.05
 			end
 
-
 			--appy low gravity
 			if _p.tpe == 5 or _p.tpe==3 then
     if abs(_p.dy)<1 then
@@ -2391,13 +2027,11 @@ function updateparts()
    	end
    end
 
-
    --shrink
    if _p.tpe == 2 or _p.tpe == 5 or _p.tpe==6  then
     local _ci=1-(_p.age/_p.mage)
     _p.s=_ci*_p.os
    end
-
 			--- rotate (was not added)
 			--if _p.tpe==3 then
 				--_p.rottimer+=1
@@ -2410,8 +2044,8 @@ function updateparts()
 			--end
 
 			--- move particle
-			_p.x+=_p.dx
-			_p.y+=_p.dy
+	_p.x+=_p.dx
+	_p.y+=_p.dy
 
 		end
 	end
@@ -2466,11 +2100,7 @@ function dropparticles(_col1,_col2,top)
 	local _btmrow= _toprow+7
 	addpart(flr(rnd(128)),_toprow,_dx,_dy,5,120+rnd(15),_mycol,3+rnd(6))
 	addpart(flr(rnd(128)),_btmrow,_dx,_dy,5,40+rnd(15),_mycol,3+rnd(6))
-
-
-
 end
-
 
 function riseparticles()
 	local _ang=rnd()
@@ -2487,7 +2117,6 @@ function riseparticles()
 	addpart(flr(rnd(128)),_toprow-flr(rnd(10)),_dx,_dy,6,120+rnd(15),_mycol,3+rnd(6))
 
 end
-
 
 function drawtxt(y)
  local x,w=6,116
@@ -2536,9 +2165,7 @@ end
 
 
 function update_talk()
-
  riseparticles()
-
  dotxt()
  if btnp(5) then
 
@@ -2588,10 +2215,7 @@ function update_talk()
  		sfx(62)
  		ch_y=min(ch_y+10,10)
 		end
-
  end
-
-
 end
 
 
@@ -2602,12 +2226,7 @@ function nexttalk()
 end
 
 
-
-
-
 function drawprofile()
-
-
 	local y=75
 	local cont=0
 	local pp=38
